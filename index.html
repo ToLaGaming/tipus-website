@@ -4,29 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>I make little games</title>
+    <style>
+        #jump-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255, 255, 0, 0.7);
+            border: none;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+        }
+    </style>
 </head>
 <body>
     <h1></h1>
+    <button id="jump-btn">JUMP</button>
 </body>
 </html>
 <script type="module">
 
     import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
-    
-    // initialize kaboom context
-    kaboom();
-    
-    // add a piece of text at position (120, 80)
-    add([
-        text("hello you internet traveler i am a game developer"),
-        pos(120, 80),
-    ]);
 
-    // Lisää oma koodisi tähän
-    // Esimerkiksi:
-    // add([
-    //     text("Tämä on uusi teksti!"),
-    //     pos(200, 150),
-    // ]);
-    
+    kaboom()
+
+    setGravity(3200)
+
+    scene("game", () => {
+
+        const PIPE_OPEN = 240
+        const PIPE_MIN = 60
+        const JUMP_FORCE = 800
+        const SPEED = 320
+        const CEILING = -60
+
+        const player = add([
+            pos(width() / 4, height() / 2),
+            circle(16),
+            color(255, 255, 0),
+            area(),
+            body(),
+        ])
+
+        player.onUpdate(() => {
+            if (player.pos.y >= height() || player.pos.y <= CEILING) {
+                go("lose", score)
+            }
+        })
+
+        function jump() {
+            player.jump(JUMP_FORCE)
+        }
+
+        onKeyPress("space", jump)
+        onClick(jump)
+
+        document.getElementById("jump-btn").addEventListener("touchstart", jump)
+
+        function spawnPipe() {
+            const h1 = rand(PIPE_MIN, height() - PIPE_MIN - PIPE_OPEN)
+            const h2 = height() - h1 - PIPE_OPEN
+
+            add([
+                pos(width(), 0),
+                rect(64, h1),
+                color(0, 127, 255),
+                area(),
+                move(LEFT, SPEED),
+                offscreen({ destroy: true }),
+                "pipe",
+            ])
+
+            add([
+                pos(width(), h1 + PIPE_OPEN),
+                rect(64, h2),
+                color(0, 127, 255),
+                area(),
+                move(LEFT, SPEED),
+                offscreen({ destroy: true }),
+                "pipe",
+                { passed: false },
+            ])
+        }
+
+        player.onCollide("pipe", () => {
+            go("lose", score)
+        })
+
+        onUpdate("pipe", (p) => {
+            if (p.pos.x + p.width <= player.pos.x && p.passed === false) {
+                addScore()
+                p.passed = true
+            }
+        })
+
+        loop(1, () => {
+            spawnPipe()
+        })
+
+        let score = 0
+
+        const scoreLabel = add([
+            text(score),
+            anchor("center"),
+            pos(width() / 2, 80),
+            fixed(),
+        ])
+
+        function addScore() {
+            score++
+            scoreLabel.text = score
+        }
+
+    })
+
+    scene("lose", (score) => {
+
+        add([
+            text(score),
+            pos(width() / 2, height() / 2),
+            scale(3),
+            anchor("center"),
+        ])
+
+        onKeyPress("space", () => go("game"))
+        onClick(() => go("game"))
+        document.getElementById("jump-btn").addEventListener("touchstart", () => go("game"))
+
+    })
+
+    go("game")
+
 </script>
