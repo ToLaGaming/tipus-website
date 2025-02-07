@@ -4,26 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>I make little games</title>
-    <style>
-        #jump-btn {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 100px;
-            background-color: rgba(255, 255, 0, 0.7);
-            border: none;
-            border-radius: 50%;
-            font-size: 20px;
-            font-weight: bold;
-            color: black;
-        }
-    </style>
 </head>
 <body>
     <h1></h1>
-    <button id="jump-btn">JUMP</button>
 </body>
 </html>
 <script type="module">
@@ -62,8 +45,6 @@
 
         onKeyPress("space", jump)
         onClick(jump)
-
-        document.getElementById("jump-btn").addEventListener("touchstart", jump)
 
         function spawnPipe() {
             const h1 = rand(PIPE_MIN, height() - PIPE_MIN - PIPE_OPEN)
@@ -133,7 +114,6 @@
 
         onKeyPress("space", () => go("game"))
         onClick(() => go("game"))
-        document.getElementById("jump-btn").addEventListener("touchstart", () => go("game"))
 
     })
 
