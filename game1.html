@@ -16,6 +16,11 @@
         const SPEED = 320;
         const CEILING = -60;
 
+        
+        const music = new Audio("music/chill game beat.wav");
+        music.loop = true; 
+        music.play(); 
+
         scene("game", () => {
             let score = 0;
 
