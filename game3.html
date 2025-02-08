@@ -13,8 +13,8 @@
         const ENEMY_SPEED = 30;
         const JUMP_FORCE = 300;
 
-        const ENEMY_ROWS = 4;
-        const ENEMY_COLS = 6;
+        const ENEMY_ROWS = 6;
+        const ENEMY_COLS = 10;
         const ENEMY_SPACING = 50;
 
         let player;
@@ -29,7 +29,6 @@
                 "player",
             ]);
 
-            // Add enemies
             const enemies = [];
             for (let i = 0; i < ENEMY_ROWS; i++) {
                 for (let j = 0; j < ENEMY_COLS; j++) {
@@ -44,7 +43,6 @@
                 }
             }
 
-            // Move player
             onUpdate(() => {
                 if (isKeyDown("left")) {
                     player.move(-PLAYER_SPEED, 0);
@@ -54,7 +52,6 @@
                 }
             });
 
-            // Shoot bullets
             onKeyPress("space", () => {
                 const bullet = add([
                     rect(4, 10),
@@ -67,17 +64,14 @@
                 bullets.push(bullet);
             });
 
-            // Move bullets
             onUpdate(() => {
                 bullets.forEach(bullet => {
                     bullet.move(bullet.velocity.x, bullet.velocity.y);
 
-                    // Destroy bullet if it goes out of screen
                     if (bullet.pos.y < 0) {
                         destroy(bullet);
                     }
 
-                    // Check for collision with enemies
                     enemies.forEach(enemy => {
                         if (bullet.isColliding(enemy)) {
                             destroy(bullet);
@@ -87,25 +81,22 @@
                 });
             });
 
-            // Move enemies
             onUpdate(() => {
                 enemies.forEach(enemy => {
                     enemy.move(ENEMY_SPEED, 0);
                     if (enemy.pos.x > width() || enemy.pos.x < 0) {
                         ENEMY_SPEED = -ENEMY_SPEED;
                         enemies.forEach(enemy => {
-                            enemy.move(0, 20); // Move down when reaching edge
+                            enemy.move(0, 20);
                         });
                     }
                 });
             });
 
-            // Win condition
             if (enemies.length === 0) {
                 go("win");
             }
 
-            // Lose condition
             onCollide("enemy", player, () => {
                 go("lose");
             });
