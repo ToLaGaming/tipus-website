@@ -19,8 +19,12 @@
         scene("game", () => {
             let score = 0;
 
-           
-            clear(135, 206, 250);
+            // Piirretään tausta vaaleansininen kuutio koko ruudun kokoinen
+            add([
+                rect(width(), height()),
+                color(135, 206, 250), // Vaaleansininen väri
+                { z: 0 }, // Tausta piirretään ensimmäisenä
+            ]);
 
             const player = add([
                 pos(width() / 4, height() / 2),
@@ -28,7 +32,7 @@
                 color(255, 255, 0),
                 area(),
                 body(),
-                { z: 2 }, 
+                { z: 2 }, // Lintu piirretään putkien päälle
             ]);
 
             player.onUpdate(() => {
@@ -41,7 +45,7 @@
                 player.jump(JUMP_FORCE);
             }
 
-            
+            // Mobiililaitteiden tuki: Napautus näytöllä hyppää
             onClick(jump);
 
             onKeyPress("space", jump);
@@ -54,23 +58,23 @@
                 add([
                     pos(width(), 0),
                     rect(64, h1),
-                    color(0, 255, 0), 
+                    color(0, 255, 0), // Vihreä väri
                     area(),
                     move(LEFT, SPEED),
                     offscreen({ destroy: true }),
                     "pipe",
-                    { z: 1 }, 
+                    { z: 1 }, // Putket piirretään ensimmäiseksi pelaajan jälkeen
                 ]);
 
                 add([
                     pos(width(), h1 + PIPE_OPEN),
                     rect(64, h2),
-                    color(0, 255, 0), 
+                    color(0, 255, 0), // Vihreä väri
                     area(),
                     move(LEFT, SPEED),
                     offscreen({ destroy: true }),
                     "pipe",
-                    { passed: false, z: 1 },
+                    { passed: false, z: 1 }, // Sama z-arvo molemmille putkille
                 ]);
             }
 
@@ -94,7 +98,7 @@
                 anchor("center"),
                 pos(width() / 2, 80),
                 fixed(),
-                { z: 3 },
+                { z: 3 }, // Score on ylimpänä
             ]);
 
             function addScore() {
