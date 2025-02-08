@@ -8,7 +8,7 @@
         import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
         kaboom();
 
-        const SPEED = 40000;
+        const SPEED = 38000;
         const BALL_SPEED = 500;
 
         scene("game", () => {
@@ -38,10 +38,10 @@
             ]);
 
             onUpdate(() => {
-    if (isKeyDown("up") && player.pos.y > 0) {
+    if (isKeyDown("w") && player.pos.y > 0) {
         player.move(0, -SPEED * dt());
     }
-    if (isKeyDown("down") && player.pos.y + player.height < height()) {
+    if (isKeyDown("s") && player.pos.y + player.height < height()) {
         player.move(0, SPEED * dt());
     }
 });
