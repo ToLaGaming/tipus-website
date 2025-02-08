@@ -10,8 +10,11 @@
 
         const SPEED = 200;
         const JUMP_FORCE = 400;
+        const FALL_DEATH = 2400;
 
-        scene("game", () => {
+        scene("game", ({ levelId, coins } = { levelId: 0, coins: 0 }) => {
+
+            // player object
             const player = add([
                 rect(20, 40),
                 pos(80, 100),
@@ -21,6 +24,7 @@
                 "player",
             ]);
 
+            // ground object
             const ground = add([
                 rect(width(), 20),
                 pos(0, height() - 20),
@@ -30,6 +34,7 @@
                 "ground",
             ]);
 
+            // platform object
             const platform = add([
                 rect(200, 20),
                 pos(150, height() - 150),
@@ -39,6 +44,7 @@
                 "platform",
             ]);
 
+            // action every frame
             onUpdate(() => {
                 if (isKeyDown("a")) {
                     player.move(-SPEED, 0);
@@ -48,6 +54,9 @@
                 }
                 if (isKeyDown("space") && player.isGrounded()) {
                     player.jump(JUMP_FORCE);
+                }
+                if (player.pos.y >= FALL_DEATH) {
+                    go("lose");
                 }
             });
 
@@ -66,6 +75,70 @@
             player.onExit("platform", () => {
                 player.isGrounded(false);
             });
+
+            // collision with danger
+            player.onCollide("danger", () => {
+                go("lose");
+            });
+
+            // collision with portal
+            player.onCollide("portal", () => {
+                if (levelId + 1 < LEVELS.length) {
+                    go("game", {
+                        levelId: levelId + 1,
+                        coins: coins,
+                    });
+                } else {
+                    go("win");
+                }
+            });
+
+            // basic movement controls
+            onKeyPress("space", () => {
+                if (player.isGrounded()) {
+                    player.jump(JUMP_FORCE);
+                }
+            });
+
+            onKeyDown("left", () => {
+                player.move(-SPEED, 0);
+            });
+
+            onKeyDown("right", () => {
+                player.move(SPEED, 0);
+            });
+
+            onKeyPress("down", () => {
+                player.weight = 3;
+            });
+
+            onKeyRelease("down", () => {
+                player.weight = 1;
+            });
+
+            const coinsLabel = add([
+                text(coins),
+                pos(24, 24),
+                fixed(),
+            ]);
+
+            onKeyPress("f", () => {
+                setFullscreen(!isFullscreen());
+            });
+        });
+
+        scene("lose", () => {
+            add([
+                text("You Lose"),
+            ]);
+            onKeyPress(() => go("game"));
+        });
+
+        scene("win", () => {
+            add([
+                text("You Win"),
+            ]);
+            onKeyPress(() => go("game"));
         });
 
         go("game");
