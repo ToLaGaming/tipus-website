@@ -20,11 +20,11 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Luodaan valo
+        
         const light = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF, 1);
         scene.add(light);
 
-        // Luodaan maata
+        
         const groundGeometry = new THREE.PlaneGeometry(20, 20);
         const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
@@ -32,17 +32,17 @@
         ground.position.y = -0.5;
         scene.add(ground);
 
-        // Luodaan pelaaja (kuutio)
+        
         const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
         const playerMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
         const player = new THREE.Mesh(playerGeometry, playerMaterial);
         player.position.y = 0.5;
         scene.add(player);
 
-        // Kamera asetetaan pelaajan sijaintiin
-        camera.position.z = 5;
+        
+        camera.position.z = 10;
 
-        // Näppäimistön syötteen käsittely
+     
         const inputMap = {};
         document.addEventListener("keydown", (event) => {
             inputMap[event.key] = true;
@@ -51,7 +51,7 @@
             inputMap[event.key] = false;
         });
 
-        // Liikkumisen päivitys
+       
         function update() {
             if (inputMap["d"]) player.position.x += 0.1;
             if (inputMap["a"]) player.position.x -= 0.1;
@@ -59,7 +59,7 @@
             if (inputMap["w"]) player.position.z -= 0.1;
         }
 
-        // Renderöintisilmukka
+      
         function animate() {
             requestAnimationFrame(animate);
 
@@ -69,7 +69,7 @@
 
         animate();
 
-        // Resizing
+       
         window.addEventListener("resize", () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
