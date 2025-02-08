@@ -22,6 +22,9 @@
             camera.attachControl(canvas, true);
             camera.wheelPrecision = 0;
             camera.inputs.attached.mousewheel.detachControl(canvas); // Poistetaan zoomaus
+            camera.upperBetaLimit = Math.PI / 2; // Rajoita ylös katsominen
+            camera.lowerBetaLimit = Math.PI / 2; // Rajoita alas katsominen
+            camera.beta = Math.PI / 2; // Aseta alkuperäinen kulma suoraan eteenpäin
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
             const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 20, height: 20 }, scene);
