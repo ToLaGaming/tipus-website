@@ -6,7 +6,10 @@
     <title>Space Invaders</title>
     <script type="module">
         import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
-        kaboom();
+        kaboom({
+            pixelScale: 2,
+            nearest: true
+        });
 
         const PLAYER_SPEED = 200;
         const BULLET_SPEED = 400;
@@ -23,7 +26,6 @@
 
         loadSprite("space_invader", "assets/space invader-2.png");
 
-
         scene("game", () => {
             player = add([
                 rect(40, 20),
@@ -38,6 +40,7 @@
                 for (let j = 0; j < ENEMY_COLS; j++) {
                     let enemy = add([
                         sprite("space_invader"),
+                        scale(0.1),
                         pos(50 + j * ENEMY_SPACING, 50 + i * ENEMY_SPACING),
                         area(),
                         "enemy",
