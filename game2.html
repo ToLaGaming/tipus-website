@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong</title>
+    <script type="module">
+        import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
+        kaboom();
+
+        const SPEED = 600;
+        const BALL_SPEED = 500;
+
+        scene("game", () => {
+            const player = add([
+                rect(20, 100),
+                pos(40, height() / 2 - 50),
+                area(),
+                color(255, 255, 255),
+                "player",
+            ]);
+
+            const ai = add([
+                rect(20, 100),
+                pos(width() - 60, height() / 2 - 50),
+                area(),
+                color(255, 255, 255),
+                "ai",
+            ]);
+
+            const ball = add([
+                circle(10),
+                pos(width() / 2, height() / 2),
+                area(),
+                color(255, 255, 255),
+                { vel: vec2(BALL_SPEED, BALL_SPEED) },
+                "ball",
+            ]);
+
+            onKeyDown("up", () => {
+                player.move(0, -SPEED);
+            });
+
+            onKeyDown("down", () => {
+                player.move(0, SPEED);
+            });
+
+            ball.onUpdate(() => {
+                ball.move(ball.vel);
+
+                if (ball.pos.y < 0 || ball.pos.y > height()) {
+                    ball.vel.y *= -1;
+                }
+
+                if (ball.pos.x < 0 || ball.pos.x > width()) {
+                    go("game");
+                }
+
+                ai.pos.y = ball.pos.y - 50;
+            });
+
+            ball.onCollide("player", () => {
+                ball.vel.x *= -1.1;
+            });
+
+            ball.onCollide("ai", () => {
+                ball.vel.x *= -1.1;
+            });
+        });
+
+        go("game");
+    </script>
+</head>
+<body>
+    <h1>Pong</h1>
+</body>
+</html>
