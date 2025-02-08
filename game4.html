@@ -20,29 +20,25 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        
         const light = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF, 1);
         scene.add(light);
 
-        
         const groundGeometry = new THREE.PlaneGeometry(20, 20);
-        const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
+        const groundMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = - Math.PI / 2;
         ground.position.y = -0.5;
         scene.add(ground);
 
-        
         const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
         const playerMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
         const player = new THREE.Mesh(playerGeometry, playerMaterial);
         player.position.y = 0.5;
         scene.add(player);
 
-        
-        camera.position.z = 10;
+        camera.position.set(0, 1.5, 5);
+        camera.lookAt(player.position);
 
-     
         const inputMap = {};
         document.addEventListener("keydown", (event) => {
             inputMap[event.key] = true;
@@ -51,15 +47,25 @@
             inputMap[event.key] = false;
         });
 
-       
         function update() {
             if (inputMap["d"]) player.position.x += 0.1;
             if (inputMap["a"]) player.position.x -= 0.1;
             if (inputMap["s"]) player.position.z += 0.1;
             if (inputMap["w"]) player.position.z -= 0.1;
+
+            camera.position.x = player.position.x;
+            camera.position.z = player.position.z + 5;
+
+            if (inputMap["ArrowLeft"]) {
+                camera.rotation.y += 0.05;
+            }
+            if (inputMap["ArrowRight"]) {
+                camera.rotation.y -= 0.05;
+            }
+
+            camera.lookAt(player.position);
         }
 
-      
         function animate() {
             requestAnimationFrame(animate);
 
@@ -69,7 +75,6 @@
 
         animate();
 
-       
         window.addEventListener("resize", () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
