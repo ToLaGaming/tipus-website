@@ -19,6 +19,7 @@
 
         let player;
         let bullets = [];
+        let enemySpeed = ENEMY_SPEED;
 
         scene("game", () => {
             player = add([
@@ -82,9 +83,9 @@
 
             onUpdate(() => {
                 enemies.forEach(enemy => {
-                    enemy.move(ENEMY_SPEED, 0);
+                    enemy.move(enemySpeed, 0);
                     if (enemy.pos.x > width() || enemy.pos.x < 0) {
-                        ENEMY_SPEED = -ENEMY_SPEED;
+                        enemySpeed = -enemySpeed;
                         enemies.forEach(enemy => {
                             enemy.move(0, 20);
                         });
