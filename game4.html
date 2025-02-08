@@ -40,10 +40,10 @@
             ));
 
             scene.onBeforeRenderObservable.add(() => {
-                if (inputMap["a"]) player.position.x -= 0.1;
-                if (inputMap["d"]) player.position.x += 0.1;
-                if (inputMap["w"]) player.position.z += 0.1;
-                if (inputMap["s"]) player.position.z -= 0.1;
+                if (inputMap["d"]) player.position.x -= 0.1;
+                if (inputMap["a"]) player.position.x += 0.1;
+                if (inputMap["s"]) player.position.z += 0.1;
+                if (inputMap["w"]) player.position.z -= 0.1;
             });
 
             return scene;
