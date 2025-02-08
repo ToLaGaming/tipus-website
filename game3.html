@@ -21,6 +21,9 @@
         let bullets = [];
         let enemySpeed = ENEMY_SPEED;
 
+        loadSprite("space_invader", "assets/space invader-2.png");
+
+
         scene("game", () => {
             player = add([
                 rect(40, 20),
@@ -34,7 +37,7 @@
             for (let i = 0; i < ENEMY_ROWS; i++) {
                 for (let j = 0; j < ENEMY_COLS; j++) {
                     let enemy = add([
-                        sprite("space invader-2"),
+                        sprite("space_invader"),
                         pos(50 + j * ENEMY_SPACING, 50 + i * ENEMY_SPACING),
                         area(),
                         "enemy",
