@@ -33,10 +33,9 @@
             for (let i = 0; i < ENEMY_ROWS; i++) {
                 for (let j = 0; j < ENEMY_COLS; j++) {
                     let enemy = add([
-                        rect(30, 20),
+                        sprite("space invader-2"),
                         pos(50 + j * ENEMY_SPACING, 50 + i * ENEMY_SPACING),
                         area(),
-                        color(255, 0, 0),
                         "enemy",
                     ]);
                     enemies.push(enemy);
