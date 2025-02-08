@@ -37,13 +37,18 @@
                 "ball",
             ]);
 
-            onKeyDown("up", () => {
-                player.move(0, -SPEED);
-            });
+            onUpdate(() => {
+    if (isKeyDown("up") && player.pos.y > 0) {
+        player.move(0, -SPEED * dt());
+    }
+    if (isKeyDown("down") && player.pos.y + player.height < height()) {
+        player.move(0, SPEED * dt());
+    }
+});
 
-            onKeyDown("down", () => {
-                player.move(0, SPEED);
-            });
+
+
+
 
             ball.onUpdate(() => {
                 ball.move(ball.vel);
