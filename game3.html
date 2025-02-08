@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platformer</title>
+    <script type="module">
+        import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
+        kaboom();
+
+        const SPEED = 200;
+        const JUMP_FORCE = 400;
+
+        scene("game", () => {
+            const player = add([
+                rect(20, 40),
+                pos(80, 100),
+                area(),
+                color(255, 0, 0),
+                body(),
+                "player",
+            ]);
+
+            const ground = add([
+                rect(width(), 20),
+                pos(0, height() - 20),
+                area(),
+                color(0, 255, 0),
+                solid(),
+                "ground",
+            ]);
+
+            const platform = add([
+                rect(200, 20),
+                pos(150, height() - 150),
+                area(),
+                color(0, 0, 255),
+                solid(),
+                "platform",
+            ]);
+
+            onUpdate(() => {
+                if (isKeyDown("a")) {
+                    player.move(-SPEED, 0);
+                }
+                if (isKeyDown("d")) {
+                    player.move(SPEED, 0);
+                }
+                if (isKeyDown("space") && player.isGrounded()) {
+                    player.jump(JUMP_FORCE);
+                }
+            });
+
+            player.onCollide("ground", () => {
+                player.isGrounded(true);
+            });
+
+            player.onCollide("platform", () => {
+                player.isGrounded(true);
+            });
+
+            player.onExit("ground", () => {
+                player.isGrounded(false);
+            });
+
+            player.onExit("platform", () => {
+                player.isGrounded(false);
+            });
+        });
+
+        go("game");
+    </script>
+</head>
+<body>
+    <h1>Platformer</h1>
+</body>
+</html>
