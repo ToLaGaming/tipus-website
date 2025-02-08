@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Simple Game</title>
+    <title>Three.js FPS Game</title>
     <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
     <style>
         body, html { margin: 0; padding: 0; overflow: hidden; }
@@ -27,49 +27,45 @@
         const groundMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = - Math.PI / 2;
-        ground.position.y = -0.5;
         scene.add(ground);
 
-        const playerGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const playerMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
-        const player = new THREE.Mesh(playerGeometry, playerMaterial);
-        player.position.y = 0.5;
+        const player = new THREE.Object3D();
         scene.add(player);
-
-        camera.position.set(0, 1.5, 5);
-        camera.lookAt(player.position);
+        player.add(camera);
+        camera.position.set(0, 1.5, 0);
 
         const inputMap = {};
-        document.addEventListener("keydown", (event) => {
-            inputMap[event.key] = true;
-        });
-        document.addEventListener("keyup", (event) => {
-            inputMap[event.key] = false;
-        });
+        document.addEventListener("keydown", (event) => inputMap[event.key] = true);
+        document.addEventListener("keyup", (event) => inputMap[event.key] = false);
+
+        let rotationY = 0;
 
         function update() {
-            if (inputMap["d"]) player.position.x += 0.1;
-            if (inputMap["a"]) player.position.x -= 0.1;
-            if (inputMap["s"]) player.position.z += 0.1;
-            if (inputMap["w"]) player.position.z -= 0.1;
-
-            camera.position.x = player.position.x;
-            camera.position.y = player.position.y;
-            camera.position.z = player.position.z + 5;
-
-            if (inputMap["ArrowLeft"]) {
-                camera.rotation.y += 0.05;
+            const speed = 0.1;
+            if (inputMap["w"]) {
+                player.position.x -= Math.sin(rotationY) * speed;
+                player.position.z -= Math.cos(rotationY) * speed;
             }
-            if (inputMap["ArrowRight"]) {
-                camera.rotation.y -= 0.05;
+            if (inputMap["s"]) {
+                player.position.x += Math.sin(rotationY) * speed;
+                player.position.z += Math.cos(rotationY) * speed;
             }
+            if (inputMap["a"]) {
+                player.position.x -= Math.cos(rotationY) * speed;
+                player.position.z += Math.sin(rotationY) * speed;
+            }
+            if (inputMap["d"]) {
+                player.position.x += Math.cos(rotationY) * speed;
+                player.position.z -= Math.sin(rotationY) * speed;
+            }
+            if (inputMap["ArrowLeft"]) rotationY += 0.05;
+            if (inputMap["ArrowRight"]) rotationY -= 0.05;
 
-            camera.lookAt(player.position);
+            player.rotation.y = rotationY;
         }
 
         function animate() {
             requestAnimationFrame(animate);
-
             update();
             renderer.render(scene, camera);
         }
