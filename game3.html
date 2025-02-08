@@ -3,140 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platformer</title>
+    <title>Space Invaders</title>
     <script type="module">
         import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
         kaboom();
 
-        const SPEED = 200;
-        const JUMP_FORCE = 400;
-        const FALL_DEATH = 2400;
+        const PLAYER_SPEED = 200;
+        const BULLET_SPEED = 400;
+        const ENEMY_SPEED = 30;
+        const JUMP_FORCE = 300;
 
-        scene("game", ({ levelId, coins } = { levelId: 0, coins: 0 }) => {
+        const ENEMY_ROWS = 4;
+        const ENEMY_COLS = 6;
+        const ENEMY_SPACING = 50;
 
-            // player object
-            const player = add([
-                rect(20, 40),
-                pos(80, 100),
+        let player;
+        let bullets = [];
+
+        scene("game", () => {
+            player = add([
+                rect(40, 20),
+                pos(width() / 2, height() - 50),
                 area(),
-                color(255, 0, 0),
-                body(),
+                color(255, 255, 0),
                 "player",
             ]);
 
-            // ground object
-            const ground = add([
-                rect(width(), 20),
-                pos(0, height() - 20),
-                area(),
-                color(0, 255, 0),
-                solid(),
-                "ground",
-            ]);
+            // Add enemies
+            const enemies = [];
+            for (let i = 0; i < ENEMY_ROWS; i++) {
+                for (let j = 0; j < ENEMY_COLS; j++) {
+                    let enemy = add([
+                        rect(30, 20),
+                        pos(50 + j * ENEMY_SPACING, 50 + i * ENEMY_SPACING),
+                        area(),
+                        color(255, 0, 0),
+                        "enemy",
+                    ]);
+                    enemies.push(enemy);
+                }
+            }
 
-            // platform object
-            const platform = add([
-                rect(200, 20),
-                pos(150, height() - 150),
-                area(),
-                color(0, 0, 255),
-                solid(),
-                "platform",
-            ]);
-
-            // action every frame
+            // Move player
             onUpdate(() => {
-                if (isKeyDown("a")) {
-                    player.move(-SPEED, 0);
+                if (isKeyDown("left")) {
+                    player.move(-PLAYER_SPEED, 0);
                 }
-                if (isKeyDown("d")) {
-                    player.move(SPEED, 0);
-                }
-                if (isKeyDown("space") && player.isGrounded()) {
-                    player.jump(JUMP_FORCE);
-                }
-                if (player.pos.y >= FALL_DEATH) {
-                    go("lose");
+                if (isKeyDown("right")) {
+                    player.move(PLAYER_SPEED, 0);
                 }
             });
 
-            player.onCollide("ground", () => {
-                player.isGrounded(true);
-            });
-
-            player.onCollide("platform", () => {
-                player.isGrounded(true);
-            });
-
-            player.onExit("ground", () => {
-                player.isGrounded(false);
-            });
-
-            player.onExit("platform", () => {
-                player.isGrounded(false);
-            });
-
-            // collision with danger
-            player.onCollide("danger", () => {
-                go("lose");
-            });
-
-            // collision with portal
-            player.onCollide("portal", () => {
-                if (levelId + 1 < LEVELS.length) {
-                    go("game", {
-                        levelId: levelId + 1,
-                        coins: coins,
-                    });
-                } else {
-                    go("win");
-                }
-            });
-
-            // basic movement controls
+            // Shoot bullets
             onKeyPress("space", () => {
-                if (player.isGrounded()) {
-                    player.jump(JUMP_FORCE);
-                }
+                const bullet = add([
+                    rect(4, 10),
+                    pos(player.pos.x + 18, player.pos.y - 10),
+                    area(),
+                    color(255, 255, 255),
+                    "bullet",
+                ]);
+                bullet.velocity = vec2(0, -BULLET_SPEED);
+                bullets.push(bullet);
             });
 
-            onKeyDown("left", () => {
-                player.move(-SPEED, 0);
+            // Move bullets
+            onUpdate(() => {
+                bullets.forEach(bullet => {
+                    bullet.move(bullet.velocity.x, bullet.velocity.y);
+
+                    // Destroy bullet if it goes out of screen
+                    if (bullet.pos.y < 0) {
+                        destroy(bullet);
+                    }
+
+                    // Check for collision with enemies
+                    enemies.forEach(enemy => {
+                        if (bullet.isColliding(enemy)) {
+                            destroy(bullet);
+                            destroy(enemy);
+                        }
+                    });
+                });
             });
 
-            onKeyDown("right", () => {
-                player.move(SPEED, 0);
+            // Move enemies
+            onUpdate(() => {
+                enemies.forEach(enemy => {
+                    enemy.move(ENEMY_SPEED, 0);
+                    if (enemy.pos.x > width() || enemy.pos.x < 0) {
+                        ENEMY_SPEED = -ENEMY_SPEED;
+                        enemies.forEach(enemy => {
+                            enemy.move(0, 20); // Move down when reaching edge
+                        });
+                    }
+                });
             });
 
-            onKeyPress("down", () => {
-                player.weight = 3;
-            });
+            // Win condition
+            if (enemies.length === 0) {
+                go("win");
+            }
 
-            onKeyRelease("down", () => {
-                player.weight = 1;
-            });
-
-            const coinsLabel = add([
-                text(coins),
-                pos(24, 24),
-                fixed(),
-            ]);
-
-            onKeyPress("f", () => {
-                setFullscreen(!isFullscreen());
+            // Lose condition
+            onCollide("enemy", player, () => {
+                go("lose");
             });
         });
 
         scene("lose", () => {
             add([
-                text("You Lose"),
+                text("Game Over"),
+                pos(width() / 2 - 50, height() / 2),
             ]);
             onKeyPress(() => go("game"));
         });
 
         scene("win", () => {
             add([
-                text("You Win"),
+                text("You Win!"),
+                pos(width() / 2 - 50, height() / 2),
             ]);
             onKeyPress(() => go("game"));
         });
@@ -145,6 +131,6 @@
     </script>
 </head>
 <body>
-    <h1>Platformer</h1>
+    <h1>Space Invaders</h1>
 </body>
 </html>
