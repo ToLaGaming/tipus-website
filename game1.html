@@ -19,6 +19,9 @@
         scene("game", () => {
             let score = 0;
 
+            // Taustaväri vaaleansiniseksi
+            background(135, 206, 250);
+
             const player = add([
                 pos(width() / 4, height() / 2),
                 circle(16),
@@ -45,10 +48,11 @@
                 const h1 = rand(PIPE_MIN, height() - PIPE_MIN - PIPE_OPEN);
                 const h2 = height() - h1 - PIPE_OPEN;
 
+                // Vihreät putket
                 add([
                     pos(width(), 0),
                     rect(64, h1),
-                    color(0, 127, 255),
+                    color(0, 255, 0), // Vihreä väri
                     area(),
                     move(LEFT, SPEED),
                     offscreen({ destroy: true }),
@@ -59,7 +63,7 @@
                 add([
                     pos(width(), h1 + PIPE_OPEN),
                     rect(64, h2),
-                    color(0, 127, 255),
+                    color(0, 255, 0), // Vihreä väri
                     area(),
                     move(LEFT, SPEED),
                     offscreen({ destroy: true }),
