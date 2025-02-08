@@ -19,8 +19,8 @@
         scene("game", () => {
             let score = 0;
 
-            // Taustaväri vaaleansiniseksi
-            background(135, 206, 250);
+           
+            clear(135, 206, 250);
 
             const player = add([
                 pos(width() / 4, height() / 2),
@@ -28,7 +28,7 @@
                 color(255, 255, 0),
                 area(),
                 body(),
-                { z: 2 }, // Lintu piirretään putkien päälle
+                { z: 2 }, 
             ]);
 
             player.onUpdate(() => {
@@ -41,8 +41,10 @@
                 player.jump(JUMP_FORCE);
             }
 
-            onKeyPress("space", jump);
+            
             onClick(jump);
+
+            onKeyPress("space", jump);
 
             function spawnPipe() {
                 const h1 = rand(PIPE_MIN, height() - PIPE_MIN - PIPE_OPEN);
@@ -52,23 +54,23 @@
                 add([
                     pos(width(), 0),
                     rect(64, h1),
-                    color(0, 255, 0), // Vihreä väri
+                    color(0, 255, 0), 
                     area(),
                     move(LEFT, SPEED),
                     offscreen({ destroy: true }),
                     "pipe",
-                    { z: 1 }, // Putket piirretään ensin
+                    { z: 1 }, 
                 ]);
 
                 add([
                     pos(width(), h1 + PIPE_OPEN),
                     rect(64, h2),
-                    color(0, 255, 0), // Vihreä väri
+                    color(0, 255, 0), 
                     area(),
                     move(LEFT, SPEED),
                     offscreen({ destroy: true }),
                     "pipe",
-                    { passed: false, z: 1 }, // Sama z-arvo molemmille putkille
+                    { passed: false, z: 1 },
                 ]);
             }
 
@@ -92,7 +94,7 @@
                 anchor("center"),
                 pos(width() / 2, 80),
                 fixed(),
-                { z: 3 }, // Score on ylimpänä
+                { z: 3 },
             ]);
 
             function addScore() {
