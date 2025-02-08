@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js FPS Game</title>
+    <title>Three.js FPS Movement</title>
     <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
     <style>
         body, html { margin: 0; padding: 0; overflow: hidden; }
@@ -23,8 +23,8 @@
         const light = new THREE.HemisphereLight(0xFFFFFF, 0xFFFFFF, 1);
         scene.add(light);
 
-        const groundGeometry = new THREE.PlaneGeometry(20, 20);
-        const groundMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+        const groundGeometry = new THREE.PlaneGeometry(50, 50);
+        const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x888888 });
         const ground = new THREE.Mesh(groundGeometry, groundMaterial);
         ground.rotation.x = - Math.PI / 2;
         scene.add(ground);
@@ -34,34 +34,61 @@
         player.add(camera);
         camera.position.set(0, 1.5, 0);
 
-        const inputMap = {};
-        document.addEventListener("keydown", (event) => inputMap[event.key] = true);
-        document.addEventListener("keyup", (event) => inputMap[event.key] = false);
+        let inputMap = {};
+        document.addEventListener("keydown", (event) => inputMap[event.key.toLowerCase()] = true);
+        document.addEventListener("keyup", (event) => inputMap[event.key.toLowerCase()] = false);
 
-        let rotationY = 0;
+        let rotationY = 0, rotationX = 0;
+        let velocity = new THREE.Vector3();
+        let speed = 0.1;
+        let gravity = -0.005;
+        let isJumping = false;
+        let jumpStrength = 0.15;
+        let yVelocity = 0;
+
+        document.body.addEventListener("click", () => {
+            canvas.requestPointerLock();
+        });
+
+        document.addEventListener("mousemove", (event) => {
+            if (document.pointerLockElement === canvas) {
+                rotationY -= event.movementX * 0.002;
+                rotationX -= event.movementY * 0.002;
+                rotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationX));
+                player.rotation.y = rotationY;
+                camera.rotation.x = rotationX;
+            }
+        });
 
         function update() {
-            const speed = 0.1;
-            if (inputMap["w"]) {
-                player.position.x -= Math.sin(rotationY) * speed;
-                player.position.z -= Math.cos(rotationY) * speed;
-            }
-            if (inputMap["s"]) {
-                player.position.x += Math.sin(rotationY) * speed;
-                player.position.z += Math.cos(rotationY) * speed;
-            }
-            if (inputMap["a"]) {
-                player.position.x -= Math.cos(rotationY) * speed;
-                player.position.z += Math.sin(rotationY) * speed;
-            }
-            if (inputMap["d"]) {
-                player.position.x += Math.cos(rotationY) * speed;
-                player.position.z -= Math.sin(rotationY) * speed;
-            }
-            if (inputMap["ArrowLeft"]) rotationY += 0.05;
-            if (inputMap["ArrowRight"]) rotationY -= 0.05;
+            let direction = new THREE.Vector3();
+            camera.getWorldDirection(direction);
+            direction.y = 0;
+            direction.normalize();
 
-            player.rotation.y = rotationY;
+            let right = new THREE.Vector3().crossVectors(direction, new THREE.Vector3(0, 1, 0)).normalize();
+
+            velocity.set(0, 0, 0);
+            if (inputMap["w"]) velocity.addScaledVector(direction, speed);
+            if (inputMap["s"]) velocity.addScaledVector(direction, -speed);
+            if (inputMap["a"]) velocity.addScaledVector(right, -speed);
+            if (inputMap["d"]) velocity.addScaledVector(right, speed);
+            
+            if (inputMap[" "] && !isJumping) {
+                yVelocity = jumpStrength;
+                isJumping = true;
+            }
+
+            yVelocity += gravity;
+            player.position.y += yVelocity;
+
+            if (player.position.y <= 1.5) {
+                player.position.y = 1.5;
+                isJumping = false;
+                yVelocity = 0;
+            }
+
+            player.position.add(velocity);
         }
 
         function animate() {
