@@ -18,20 +18,22 @@
 
         const createScene = () => {
             const scene = new BABYLON.Scene(engine);
-            const camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 5, -10), scene);
+            const camera = new BABYLON.UniversalCamera("FP_Camera", new BABYLON.Vector3(0, 1, -10), scene); 
             camera.attachControl(canvas, true);
-            camera.wheelPrecision = 0;
-            camera.inputs.attached.mousewheel.detachControl(canvas); // Poistetaan zoomaus
-            camera.upperBetaLimit = Math.PI / 2; // Rajoita ylös katsominen
-            camera.lowerBetaLimit = Math.PI / 2; // Rajoita alas katsominen
-            camera.beta = Math.PI / 2; // Aseta alkuperäinen kulma suoraan eteenpäin
+            camera.inputs.clear(); 
+            camera.inputs.addMouse();
+            camera.inputs.addKeyboard();
+            camera.angularSensibilityX = 1000; 
+            camera.angularSensibilityY = 0; 
+            camera.inertia = 0.1;
+
             const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
             const ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 20, height: 20 }, scene);
 
             const player = BABYLON.MeshBuilder.CreateBox("player", { size: 1 }, scene);
             player.position.y = 0.5;
-            camera.lockedTarget = player;
+            camera.position = player.position.clone();
 
             const inputMap = {};
             scene.actionManager = new BABYLON.ActionManager(scene);
@@ -47,6 +49,7 @@
                 if (inputMap["a"]) player.position.x += 0.1;
                 if (inputMap["s"]) player.position.z += 0.1;
                 if (inputMap["w"]) player.position.z -= 0.1;
+                camera.position = player.position.clone(); 
             });
 
             return scene;
