@@ -4,100 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game Collection</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-        h1 {
-            margin-top: 50px;
-            font-size: 40px;
-            color: #333;
-        }
-        .game-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .game-item {
-            background-color: #fff;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-        }
-        .game-item img {
-            max-width: 100%;
-            border-radius: 10px;
-        }
-        .game-item h3 {
-            margin: 15px 0;
-            font-size: 24px;
-            color: #333;
-        }
-        .game-item p {
-            color: #666;
-        }
-        .play-button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .play-button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <h1>Game Collection (warning some games might be broken this site is still under active development and if a game does not say it supports mobile controls then it does not support them)</h1>
+    <h1>Game Collection</h1>
+    <p class="warning">⚠️ Some games might be broken. This site is still under active development. If a game does not say it supports mobile controls, then it does not support them.</p>
     
     <div class="game-list">
         <div class="game-item">
             <img src="assets/flappyBirdThumblail.png" alt="Game 1">
-            <h3>Game 1: Flappy Bird</h3>
-            <p>Control the bird, avoid pipes, and collect points! supports mobile controls</p>
+            <h3>Flappy Bird</h3>
+            <p>Control the bird, avoid pipes, and collect points! Supports mobile controls.</p>
             <a href="game1.html"><button class="play-button">Play Now</button></a>
         </div>
 
         <div class="game-item">
             <img src="assets/pongLogo.png" alt="Game 2">
-            <h3>Game 2: Pong</h3>
+            <h3>Pong</h3>
             <p>Classic Pong game! Bounce the ball between paddles and try to score points!</p>
             <a href="game2.html"><button class="play-button">Play Now</button></a>
         </div>
 
         <div class="game-item">
-            <img src="assets/space invader-2.png" alt="Game 3" style="image-rendering: pixelated;">
-            <h3>Game 3: Space invaders</h3>
-            <p>Survive and destroy all aliens in your way</p>
+            <img src="assets/space invader-2.png" alt="Game 3" class="pixelated">
+            <h3>Space Invaders</h3>
+            <p>Survive and destroy all aliens in your way.</p>
             <a href="game3.html"><button class="play-button">Play Now</button></a>
         </div>
 
         <div class="game-item">
             <img src="game-thumbnail4.jpg" alt="Game 4">
-            <h3>Game 4: 3d fps</h3>
-            <p>I dont know yet? but i know it will be a fps game</p>
+            <h3>3D FPS</h3>
+            <p>Unknown details yet, but it will be an FPS game.</p>
             <a href="game4.html"><button class="play-button">Play Now</button></a>
         </div>
 
         <div class="game-item">
             <img src="game-thumbnail5.jpg" alt="Game 5">
-            <h3>Game 5: secret</h3>
-            <p>u will not know in a long time:)</p>
+            <h3>Secret</h3>
+            <p>You will not know for a long time 🙂</p>
             <a href="game5.html"><button class="play-button">Play Now</button></a>
         </div>
-        
-        <!-- Add more games in the same way -->
-
     </div>
 
 </body>
