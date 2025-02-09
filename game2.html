@@ -13,6 +13,13 @@
         const BALL_SPEED = 500;
 
         scene("game", () => {
+            add([
+                rect(width(), height()),
+                color(0, 0, 0),
+                pos(0, 0),
+                { z: -1 },
+            ]);
+
             const player = add([
                 rect(20, 100),
                 pos(40, height() / 2 - 50),
