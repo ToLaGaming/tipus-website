@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Invaders</title>
+    <link rel="stylesheet" href="game3.css">
     <script type="module">
         import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
         kaboom({
@@ -14,8 +15,6 @@
         const PLAYER_SPEED = 200;
         const BULLET_SPEED = 400;
         const ENEMY_SPEED = 30;
-        const JUMP_FORCE = 300;
-
         const ENEMY_ROWS = 6;
         const ENEMY_COLS = 10;
         const ENEMY_SPACING = 30;
@@ -27,6 +26,13 @@
         loadSprite("space_invader", "assets/space invader-2.png");
 
         scene("game", () => {
+            add([
+                rect(width(), height()),
+                pos(0, 0),
+                color(0, 0, 0),
+                "background",
+            ]);
+
             player = add([
                 rect(40, 20),
                 pos(width() / 2, height() - 50),
@@ -50,10 +56,10 @@
             }
 
             onUpdate(() => {
-                if (isKeyDown("left")) {
+                if (isKeyDown("a")) {
                     player.move(-PLAYER_SPEED, 0);
                 }
-                if (isKeyDown("right")) {
+                if (isKeyDown("d")) {
                     player.move(PLAYER_SPEED, 0);
                 }
             });
