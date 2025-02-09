@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
     margin: 0;
@@ -9,10 +10,12 @@ body {
 }
 
 h1 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     margin: 20px 0;
-    font-size: 2em;
 }
-
 
 #gameCanvas {
     display: block;
@@ -20,7 +23,6 @@ h1 {
     background-color: black;
     border: 2px solid white;
 }
-
 
 .player, .enemy {
     position: absolute;
@@ -37,7 +39,6 @@ h1 {
     width: 30px;
     height: 30px;
 }
-
 
 .bullet {
     position: absolute;
