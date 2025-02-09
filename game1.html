@@ -45,7 +45,6 @@
             function jump() {
                 player.jump(JUMP_FORCE);
                 if (!music) {
-                   
                     music = new Audio("music/chill game beat.wav");
                     music.loop = true;
                     music.play(); 
@@ -88,7 +87,7 @@
 
             onUpdate("pipe", (p) => {
                 if (p.pos.x + p.width <= player.pos.x && !p.passed) {
-                    addScore();
+                    addScore(0.5);
                     p.passed = true;
                 }
             });
@@ -105,8 +104,8 @@
                 { z: 3 },
             ]);
 
-            function addScore() {
-                score++;
+            function addScore(points) {
+                score += points;
                 scoreLabel.text = score;
             }
         });
