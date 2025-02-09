@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong</title>
+    <link rel="stylesheet" href="game2style.css">
     <script type="module">
         import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
         kaboom();
@@ -38,17 +39,13 @@
             ]);
 
             onUpdate(() => {
-    if (isKeyDown("w") && player.pos.y > 0) {
-        player.move(0, -SPEED * dt());
-    }
-    if (isKeyDown("s") && player.pos.y + player.height < height()) {
-        player.move(0, SPEED * dt());
-    }
-});
-
-
-
-
+                if (isKeyDown("w") && player.pos.y > 0) {
+                    player.move(0, -SPEED * dt());
+                }
+                if (isKeyDown("s") && player.pos.y + player.height < height()) {
+                    player.move(0, SPEED * dt());
+                }
+            });
 
             ball.onUpdate(() => {
                 ball.move(ball.vel);
