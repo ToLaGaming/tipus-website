@@ -1,131 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
-    <script type="module">
-        import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
-        kaboom();
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-        setGravity(3200);
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: white;
+}
 
-        const PIPE_OPEN = 240;
-        const PIPE_MIN = 60;
-        const JUMP_FORCE = 800;
-        const SPEED = 320;
-        const CEILING = -60;
+h1 {
+    margin-top: 40px;
+    font-size: 42px;
+    font-weight: 600;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+}
 
-        let music; 
+.warning {
+    font-size: 16px;
+    color: #ffcc00;
+    margin-bottom: 30px;
+}
 
-        scene("game", () => {
-            let score = 0;
+.game-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
 
-            add([
-                rect(width(), height()),
-                color(135, 206, 250),
-                { z: 0 },
-            ]);
+.game-item {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.3s;
+}
 
-            const player = add([
-                pos(width() / 4, height() / 2),
-                circle(16),
-                color(255, 255, 0),
-                area(),
-                body(),
-                { z: 2 },
-            ]);
+.game-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
 
-            player.onUpdate(() => {
-                if (player.pos.y >= height() || player.pos.y <= CEILING) {
-                    go("lose", score);
-                }
-            });
+.game-item img {
+    max-width: 100%;
+    border-radius: 10px;
+}
 
-            function jump() {
-                player.jump(JUMP_FORCE);
-                if (!music) {
-                    music = new Audio("music/chill game beat.wav");
-                    music.loop = true;
-                    music.play(); 
-                }
-            }
+.game-item h3 {
+    margin: 15px 0;
+    font-size: 22px;
+    font-weight: 400;
+}
 
-            onClick(jump);
-            onKeyPress("space", jump);
+.game-item p {
+    color: #ddd;
+    font-size: 14px;
+}
 
-            function spawnPipe() {
-                const h1 = rand(PIPE_MIN, height() - PIPE_MIN - PIPE_OPEN);
-                const h2 = height() - h1 - PIPE_OPEN;
+.play-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #ff6f61;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.2s;
+}
 
-                add([
-                    pos(width(), 0),
-                    rect(64, h1),
-                    color(0, 255, 0),
-                    area(),
-                    move(LEFT, SPEED),
-                    offscreen({ destroy: true }),
-                    "pipe",
-                    { z: 1 },
-                ]);
+.play-button:hover {
+    background: #ff4838;
+    transform: scale(1.05);
+}
 
-                add([
-                    pos(width(), h1 + PIPE_OPEN),
-                    rect(64, h2),
-                    color(0, 255, 0),
-                    area(),
-                    move(LEFT, SPEED),
-                    offscreen({ destroy: true }),
-                    "pipe",
-                    { passed: false, z: 1 },
-                ]);
-            }
-
-            player.onCollide("pipe", () => {
-                go("lose", score);
-            });
-
-            onUpdate("pipe", (p) => {
-                if (p.pos.x + p.width <= player.pos.x && !p.passed) {
-                    addScore(0.5);
-                    p.passed = true;
-                }
-            });
-
-            loop(1, () => {
-                spawnPipe();
-            });
-
-            const scoreLabel = add([
-                text(score),
-                anchor("center"),
-                pos(width() / 2, 80),
-                fixed(),
-                { z: 3 },
-            ]);
-
-            function addScore(points) {
-                score += points;
-                scoreLabel.text = score;
-            }
-        });
-
-        scene("lose", (score) => {
-            add([
-                text(`Score: ${score}`),
-                pos(width() / 2, height() / 2),
-                scale(3),
-                anchor("center"),
-            ]);
-
-            onKeyPress("space", () => go("game"));
-            onClick(() => go("game"));
-        });
-
-        go("game");
-    </script>
-</head>
-<body>
-    <h1>Flappy Bird</h1>
-</body>
-</html>
+.pixelated {
+    image-rendering: pixelated;
+}
