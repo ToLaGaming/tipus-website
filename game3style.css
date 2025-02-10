@@ -3,41 +3,45 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: black;
-    color: white;
-    font-family: Arial, sans-serif;
+    background: repeating-linear-gradient(45deg, #0d0d0d, #1a1a1a 10px, #262626 20px);
+    color: #ffcc00;
+    font-family: 'Press Start 2P', cursive;
     text-align: center;
 }
 
 h1 {
-    font-family: 'Press Start 2P', cursive;
     font-size: 1.5em;
     text-transform: uppercase;
     letter-spacing: 2px;
     margin: 20px 0;
+    text-shadow: 4px 4px 0px #000, 8px 8px 0px #ff6f61;
 }
 
 #gameCanvas {
     display: block;
     margin: 0 auto;
     background-color: black;
-    border: 2px solid white;
+    border: 4px solid #ffcc00;
+    box-shadow: 6px 6px 0px #000, 12px 12px 0px #ff4757;
 }
 
 .player, .enemy {
     position: absolute;
-    background-color: white;
+    background-color: #ffcc00;
+    border: 2px solid #000;
 }
 
 .player {
     width: 40px;
     height: 20px;
     bottom: 50px;
+    box-shadow: 3px 3px 0px #ff6f61;
 }
 
 .enemy {
     width: 30px;
     height: 30px;
+    box-shadow: 3px 3px 0px #ff4757;
 }
 
 .bullet {
@@ -45,4 +49,6 @@ h1 {
     width: 4px;
     height: 10px;
     background-color: red;
+    border: 1px solid #ffcc00;
+    box-shadow: 2px 2px 0px #000;
 }
