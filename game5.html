@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platformer Game</title>
+    <script type="module">
+        import kaboom from "https://unpkg.com/kaboom@3000.0.1/dist/kaboom.mjs";
+
+        // Käynnistetään peli
+        kaboom();
+
+        // Määritellään pelihahmo (neliö)
+        const player = add([
+            rect(32, 32),  // 32x32 kokoinen neliö
+            pos(100, 100),
+            color(255, 0, 0),  // Punainen väri
+            area(),
+            body(),
+        ]);
+
+        // Määritellään kenttä (yksinkertaisia laatikoita)
+        addLevel([
+            "                    ",
+            "                    ",
+            "   ===============  ",
+            "                    ",
+            "                    ",
+            "                    ",
+        ], {
+            width: 32,
+            height: 32,
+            "=": () => [
+                rect(32, 32),  // Laatikko
+                color(0, 0, 255),  // Sininen väri
+                solid(),
+                area(),
+                body(),
+            ]
+        });
+
+        // Liikkeet
+        keyDown("left", () => {
+            player.move(-100, 0);
+        });
+
+        keyDown("right", () => {
+            player.move(100, 0);
+        });
+
+        keyDown("space", () => {
+            if (player.grounded()) {
+                player.jump(400);
+            }
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
